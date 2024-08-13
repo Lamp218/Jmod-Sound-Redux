@@ -81,11 +81,10 @@ if SERVER then
 
 	function ENT:DisconnectAll()
 		for k, v in pairs(self.EZconnections) do
-			JMod.RemoveConnection(self, k)
+			JMod.RemoveResourceConnection(self, k)
 		end
 	end
 
-	-- TODO: Figure out some logic inconsitancies with auto-turn on/off
 	function ENT:Think()
 		local Time, State = CurTime(), self:GetState()
 		self.EZconnections = self.EZconnections or {}
@@ -104,7 +103,7 @@ if SERVER then
 			local Ent, Cable = Entity(entID), cable
 
 			if not IsValid(Ent) or not IsValid(Cable) then
-				JMod.RemoveConnection(self, entID)
+				JMod.RemoveResourceConnection(self, entID)
 			elseif Ent.EZpowerProducer then
 				if SelfPower <= (self.MaxElectricity * .5) then
 					Ent:TurnOn(nil, true)
@@ -139,7 +138,7 @@ if SERVER then
 					Ent:TurnOn()
 				end
 			elseif SelfPower >= 1 then
-				JMod.RemoveConnection(self, entID)
+				JMod.RemoveResourceConnection(self, entID)
 			end
 		end
 		if self:GetElectricity() > self.MaxElectricity then

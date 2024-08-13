@@ -395,7 +395,7 @@ if(SERVER)then
 		end
 		if self.EZconnections then
 			for entID, cable in ipairs(self.EZconnections) do
-				JMod.RemoveConnection(self, entID)
+				JMod.RemoveResourceConnection(self, entID)
 			end
 		end
 		if(self.OnBreak)then self:OnBreak() end
@@ -609,6 +609,15 @@ if(SERVER)then
 		return 0
 	end
 
+	--[[function ENT:OnEntityCopyTableFinish(tbl)
+		if self.EZconnections then
+			tbl.EZconnections = table.FullCopy(self.EZconnections)
+			print("Copying EZ connections")
+			print(self.EZconnections)
+			print(tbl.EZconnections)
+		end
+	end--]]
+
 	-- Entity save/dupe functionality
 	function ENT:PostEntityPaste(ply, ent, createdEntities)
 		local Time = CurTime()
@@ -620,16 +629,13 @@ if(SERVER)then
 			elseif self.EZownerID then
 				JMod.SetEZowner(self, player.GetBySteamID64(self.EZownerID), true)
 			end
-			ent.NextRefillTime = Time + 1
+			ent.NextRefillTime = 0
 			if ent.NextUseTime then
 				ent.NextUseTime = Time + 1
 			end
 			if ent.SoundLoop then
 				self.SoundLoop:Stop()
 				self.SoundLoop = nil
-			end
-			if ent.OnPostEntityPaste then
-				ent:OnPostEntityPaste(ply, ent, createdEntities)
 			end
 			if not(JMod.IsAdmin(ply)) and not(ent:GetPersistent()) then
 				if ent.EZconsumes and not(JMod.Config.Machines.SpawnMachinesFull) then
@@ -658,22 +664,26 @@ if(SERVER)then
 				timer.Simple(0, function()
 					if not IsValid(ent) then return end
 					--print("Machine with connection: "..tostring(ent))
+					local NewConnections = {}
 					for entID, cable in pairs(ent.EZconnections) do
 						--print("Original ID for connection: "..tostring(entID), "| Cable: "..tostring(cable), "| New entity: "..tostring(createdEntities[entID]))
+						local NewEntIndex = entID
 						if createdEntities[entID] then
 							local ConnectedEnt = createdEntities[entID]
 							if IsValid(ConnectedEnt) then
 								local CableConnection = constraint.FindConstraintEntity(ent, "Rope")
 								--print(ConnectedEnt, CableConnection)
 								if IsValid(CableConnection) then
-									ent.EZconnections[ConnectedEnt:EntIndex()] = CableConnection
-									ConnectedEnt.EZconnections[ent:EntIndex()] = CableConnection
-									break
+									NewConnections[ConnectedEnt:EntIndex()] = CableConnection
 								end
 							end
 						end
 					end
+					ent.EZconnections = NewConnections
 				end)
+			end
+			if ent.OnPostEntityPaste then
+				ent:OnPostEntityPaste(ply, ent, createdEntities)
 			end
 		end
 	end

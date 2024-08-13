@@ -113,10 +113,6 @@ if(SERVER)then
 		if(self.SoundLoop)then self.SoundLoop:Stop() end
 	end
 
-	function ENT:SpawnEffect(pos)
-		self:EmitSound("snds_jack_gmod/ding.ogg", 80, 120)
-	end
-
 	function ENT:ProduceResource()
 		local SelfPos, Forward, Up, Right = self:GetPos(), self:GetForward(), self:GetUp(), self:GetRight()
 		local amt = math.Clamp(math.floor(self:GetProgress()), 0, 100)
@@ -202,7 +198,7 @@ if(SERVER)then
 				local Tr=util.QuickTrace(GasPos, Vector(0, 0, 9e9), self)
 				if not (Tr.HitSky) then
 					for i = 1, 1 do
-						local Gas = ents.Create("ent_jack_gmod_ezgasparticle")
+						local Gas = ents.Create("ent_jack_gmod_ezcoparticle")
 						Gas:SetPos(GasPos)
 						JMod.SetEZowner(Gas, self.EZowner)
 						Gas:SetDTBool(0, true)
