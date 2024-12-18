@@ -276,6 +276,13 @@ function JMod.InitGlobalConfig(forceNew, configToApply)
 						{"ent_jack_gmod_eztoolbox", 2}
 					}
 				},
+				["advanced toolboxes"] = {
+					description = "Two highly advanced toolboxes meant for creating advanced machinery",
+					category = "Tools",
+					results = {
+						{"ent_jack_gmod_ezadvtoolbox", 2}
+					}
+				},
 				["rations"] = {
 					description = "500 units of Nutrients, to be eaten by players. Can overcharge health.",
 					category = "Resources",
@@ -1385,7 +1392,7 @@ function JMod.InitGlobalConfig(forceNew, configToApply)
 				},
 				sizeScale = 6,
 				category = "Machines",
-				craftingType = "toolbox",
+				craftingType = "advtoolbox",
 				description = "Generator that uses radioactive decay to slowly create power.\nWorks just about anywhere."
 			},
 			["EZ Sprinkler"] = {
@@ -1950,6 +1957,18 @@ function JMod.InitGlobalConfig(forceNew, configToApply)
 				category = "Tools",
 				craftingType = {"craftingtable", "workbench"},
 				description = "Build, Upgrade, Salvage. All you need to build the big machines."
+			},
+			["EZ Advanced Toolbox"] = {
+				results = "ent_jack_gmod_ezadvtoolbox",
+				craftingReqs = {
+					[JMod.EZ_RESOURCE_TYPES.BASICPARTS] = 150,
+					[JMod.EZ_RESOURCE_TYPES.PRECISIONPARTS] = 75,
+					[JMod.EZ_RESOURCE_TYPES.ADVANCEDPARTS] = 25
+				},
+				noRequirementScaling = true,
+				category = "Tools",
+				craftingType = "workbench",
+				description = "A more advanced toolbox suited only for advanced machines"
 			},
 			["EZ Chemical Power"] = {
 				results = "ent_jack_gmod_ezbattery",
